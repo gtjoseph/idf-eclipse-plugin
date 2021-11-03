@@ -24,43 +24,50 @@ jobs:
         distribution: 'adopt'
    
     - name: Build with Maven
-      run: mvn clean verify -Djarsigner.skip=true
-  
-    - name: Create macosx dmg
-      run: $PWD/releng/ide-dmg-builder/ide-dmg-builder.sh
+      script:
+        - UNIQ_SUFFIX="$(git describe --tags --dirty --abbrev=8)"
+        - export JARSIGNER_KEYSTORE_B64=${JARSIGNER_REL_KEYSTORE_B64:-${JARSIGNER_DEV_KEYSTORE_B64}}
+        - export JARSIGNER_STOREPASS=${JARSIGNER_REL_STOREPASS:-${JARSIGNER_DEV_STOREPASS}}
+        - export JARSIGNER_ALIAS=${JARSIGNER_REL_ALIAS:-${JARSIGNER_DEV_ALIAS}}
+        - KEYSTORE_FILE="${PWD}/${JARSIGNER_KEYSTORE}"
+        - printf "%s" "${JARSIGNER_KEYSTORE_B64}" | base64 -d --ignore-garbage - > "${KEYSTORE_FILE}"
+        - mvn -e -X clean install -Djarsigner.keystore="${KEYSTORE_FILE}" -Djarsigner.alias="${JARSIGNER_ALIAS}" -Djarsigner.storepass="${JARSIGNER_STOREPASS}"
+          
+    # - name: Create macosx dmg
+    #   run: $PWD/releng/ide-dmg-builder/ide-dmg-builder.sh
 
-    - name: Upload build artifacts
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: com.espressif.idf.update
-        path: releng/com.espressif.idf.update/target/repository
+    # - name: Upload build artifacts
+    #   if: ${{ !cancelled() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: com.espressif.idf.update
+    #     path: releng/com.espressif.idf.update/target/repository
         
-    - name: Upload windows rcp
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: espressif-ide-win32
-        path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-win32.win32.x86_64.zip
+    # - name: Upload windows rcp
+    #   if: ${{ !cancelled() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: espressif-ide-win32
+    #     path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-win32.win32.x86_64.zip
 
-    - name: Upload macOS rcp
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: espressif-ide-macosx
-        path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-macosx.cocoa.x86_64.tar.gz
+    # - name: Upload macOS rcp
+    #   if: ${{ !cancelled() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: espressif-ide-macosx
+    #     path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-macosx.cocoa.x86_64.tar.gz
 
-    - name: Upload linux rcp
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: espressif-ide-linux
-        path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-linux.gtk.x86_64.tar.gz
+    # - name: Upload linux rcp
+    #   if: ${{ !cancelled() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: espressif-ide-linux
+    #     path: releng/com.espressif.idf.product/target/products/Espressif-IDE-*-linux.gtk.x86_64.tar.gz
     
-    - name: Upload macosx dmg
-      if: ${{ !cancelled() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: espressif-ide-macosx-dmg
-        path: releng/ide-dmg-builder/Espressif-IDE.dmg
+    # - name: Upload macosx dmg
+    #   if: ${{ !cancelled() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: espressif-ide-macosx-dmg
+    #     path: releng/ide-dmg-builder/Espressif-IDE.dmg
   
