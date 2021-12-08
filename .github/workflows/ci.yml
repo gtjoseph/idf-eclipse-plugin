@@ -29,8 +29,6 @@ jobs:
         export JARSIGNER_STOREPASS=${JARSIGNER_REL_STOREPASS:-${JARSIGNER_DEV_STOREPASS}}
         export JARSIGNER_ALIAS=${JARSIGNER_REL_ALIAS:-${JARSIGNER_DEV_ALIAS}}
         KEYSTORE_FILE="${PWD}/${JARSIGNER_KEYSTORE}"
-        printf "%s" "${JARSIGNER_KEYSTORE_B64}" | base64 -d --ignore-garbage - > "${KEYSTORE_FILE}"
-        mvn -e -X clean install -Djarsigner.keystore="${KEYSTORE_FILE}" -Djarsigner.alias="${JARSIGNER_ALIAS}" -Djarsigner.storepass="${JARSIGNER_STOREPASS}"
           
     # - name: Create macosx dmg
     #   run: $PWD/releng/ide-dmg-builder/ide-dmg-builder.sh
