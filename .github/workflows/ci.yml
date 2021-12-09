@@ -29,7 +29,7 @@ jobs:
         export JARSIGNER_STOREPASS=${{secrets.JARSIGNER_REL_STOREPASS}}
         export JARSIGNER_ALIAS=${{secrets.JARSIGNER_REL_ALIAS}}
         KEYSTORE_FILE="${PWD}/{{secrets.JARSIGNER_KEYSTORE}}"
-        printf "%s" "${JARSIGNER_KEYSTORE_B64}" | base64 -d --ignore-garbage - > "${KEYSTORE_FILE}"
+        printf "%s" "${JARSIGNER_KEYSTORE_B64}" | base64 -d - > "${KEYSTORE_FILE}"
 
           
     # - name: Create macosx dmg
