@@ -25,9 +25,9 @@ jobs:
    
     - name: Build with Maven
       run: |
-        export JARSIGNER_KEYSTORE_B64=${{secrets.JARSIGNER_REL_KEYSTORE_B64:-${{secrets.JARSIGNER_DEV_KEYSTORE_B64}}}}
-        export JARSIGNER_STOREPASS=${{secrets.JARSIGNER_REL_STOREPASS:-${{secrets.JARSIGNER_DEV_STOREPASS}}}}
-        export JARSIGNER_ALIAS=${{secrets.JARSIGNER_REL_ALIAS:-${{secrets.JARSIGNER_DEV_ALIAS}}}}
+        export JARSIGNER_KEYSTORE_B64=${{secrets.JARSIGNER_REL_KEYSTORE_B64}}
+        export JARSIGNER_STOREPASS=${{secrets.JARSIGNER_REL_STOREPASS}}
+        export JARSIGNER_ALIAS=${{secrets.JARSIGNER_REL_ALIAS}}
         KEYSTORE_FILE="${PWD}/{{secrets.JARSIGNER_KEYSTORE}}"
         printf "%s" "${JARSIGNER_KEYSTORE_B64}" | base64 -d --ignore-garbage - > "${KEYSTORE_FILE}"
 
